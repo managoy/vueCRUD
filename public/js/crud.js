@@ -14336,34 +14336,53 @@ var crud = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     return {
       name: '',
       email: '',
-      address: ''
+      address: '',
+      students: [],
+      preData: []
     };
+  },
+  mounted: function mounted() {
+    this.showData();
   },
   methods: {
     showData: function showData(e) {
-      e.preventDefault();
       var currentObj = this;
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/api/student').then(function (response) {
-        currentObj.output = response.data;
-        alert("Data taken");
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/student').then(function (response) {
+        currentObj.students = response.data;
       })["catch"](function (error) {
         currentObj.output = error;
       });
     },
     postData: function postData(e) {
-      debugger;
       e.preventDefault();
       var currentObj = this;
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/student', {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/student', {
         name: this.name,
         email: this.email,
         address: this.address
       }).then(function (response) {
         currentObj.output = response.data;
+        currentObj.showData();
         alert("Data Succesfully Inserted");
       })["catch"](function (error) {
         currentObj.output = error;
       });
+    },
+    deleteTuple: function deleteTuple(id) {
+      var currentObj = this;
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]('student/' + id).then(function (response) {
+        currentObj.output = response.data;
+        currentObj.showData();
+        alert("Data Deleted");
+      })["catch"](function (error) {
+        currentObj.output = error;
+      });
+    },
+    openModal: function openModal(data) {
+      debugger;
+      var currentObj = this;
+      currentObj.preData = data;
+      $('#exampleModal').modal('show');
     }
   }
 });

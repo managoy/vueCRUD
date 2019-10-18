@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
+    private $data;
+
     /**
      * Display a listing of the resource.
      *
@@ -17,10 +19,31 @@ class StudentController extends Controller
     public function index()
     {
 
-        echo 'Hello you hit a controller through api';
+        DB::transaction(function () {
+            $this->data = Student::all();
+        });
+
+        return response()->json($this->data);
 
 
     }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request, StoreStudent $req)
+    {
+        DB::transaction(function () use ($req) {
+            $this->data = $req->data();
+            Student::create($this->data);
+        });
+        $this->data = Student::all();
+        return response()->json($this->data);
+        //return redirect('crud')->with('message','Thankyou!! Your Request has been recorded.');
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -32,25 +55,11 @@ class StudentController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, StoreStudent $req)
-    {
-        DB::transaction(function () use($req){
-        $data = $req->validated();
-        Student::create($data);
-    });
-        //return redirect('crud')->with('message','Thankyou!! Your Request has been recorded.');
-    }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -61,7 +70,7 @@ class StudentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -72,8 +81,8 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -84,11 +93,13 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($student)
     {
-        //
+
+       DB::table('students')->delete($student);
+       return "Data Deleted";
     }
 }

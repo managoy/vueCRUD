@@ -31,5 +31,15 @@ class StoreStudent extends FormRequest
         ];
     }
 
+    public function data()
+    {
+        $data=[
+            'name'=>$this->get('name'),
+            'email'=>$this->get('email'),
+            'address'=>$this->get('address')
+        ];
+        return $data;
+    }
+
 
 }

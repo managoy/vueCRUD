@@ -1,6 +1,6 @@
 <label for="name">Name:</label>
 <div class="form-group">
-    <input type="text" v-model="name" name="name" value="{{old('name') }}" class="form-control">
+    <input type="text" v-model="name" name="name" value="{{old('name')}}" class="form-control">
     <div>{{ $errors->first('name') }}</div>
 </div>
 
@@ -16,7 +16,5 @@
     <input type="text" name="address" v-model="address" value="{{old('address')}}"  class="form-control">
     <div>{{ $errors->first('address') }}</div>
 </div>
-<div>
-    <button class="btn btn-primary">Add</button>
-</div>
+
 @csrf

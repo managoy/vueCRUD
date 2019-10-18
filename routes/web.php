@@ -16,3 +16,6 @@ Route::get('/', function () {
 });
 
 Route::view('crud','student.index');
+Route::get('student','StudentController@index');
+Route::post('student','StudentController@store');
+Route::delete('student/{student}','StudentController@destroy');

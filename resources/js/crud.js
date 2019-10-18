@@ -1,48 +1,70 @@
-import Vue from  'vue';
+import Vue from 'vue';
 import axios from 'axios';
-
 
 
 var crud = new Vue({
     el: '#crud',
-    data(){
-        return{
-            name:'',
-            email:'',
-            address:'',
+    data() {
+        return {
+            name: '',
+            email: '',
+            address: '',
+            students: [],
+            preData:[],
         };
     },
-    methods:{
-        showData: function(e){
+    mounted() {
+        this.showData();
+    },
+    methods: {
+        showData: function (e) {
+            let currentObj = this;
+            axios.get('/student')
+                .then(function (response) {
+                    currentObj.students = response.data;
 
-            e.preventDefault();
-            let currentObj =this;
-            axios.get('/api/student')
-                .then(function (response){
-                    currentObj.output = response.data;
-                    alert("Data taken");
                 })
-                .catch(function(error){
+                .catch(function (error) {
                     currentObj.output = error;
                 });
         },
-        postData: function(e){
-            debugger;
+        postData: function (e) {
             e.preventDefault();
             let currentObj = this;
-            axios.post('/api/student',{
+            axios.post('/student', {
                 name: this.name,
                 email: this.email,
                 address: this.address
             })
-                .then(function (response){
+                .then(function (response) {
                     currentObj.output = response.data;
+                    currentObj.showData();
                     alert("Data Succesfully Inserted");
                 })
-                .catch(function(error){
+                .catch(function (error) {
                     currentObj.output = error;
                 });
 
+        },
+        deleteTuple: function (id) {
+
+            let currentObj = this;
+            axios.delete('student/'+id)
+            .then(function (response) {
+                currentObj.output = response.data;
+                currentObj.showData();
+                alert("Data Deleted");
+            })
+                .catch(function (error) {
+                    currentObj.output = error;
+                });
+        },
+        openModal: function(data){
+            debugger;
+            let currentObj = this;
+            currentObj.preData = data;
+            $('#exampleModal').modal('show');
         }
     }
+
 })
