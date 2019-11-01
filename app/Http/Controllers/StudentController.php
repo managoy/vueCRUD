@@ -64,7 +64,9 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $article = Student::find($id);
+        $history = $article->revisionHistory;
+        return json_encode($history);
     }
 
     /**
@@ -85,9 +87,13 @@ class StudentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreStudent $req, $id)
     {
-        //
+        DB::transaction(function () use ($req,$id) {
+            $this->data = $req->data();
+            Student::findOrFail($id)->update($this->data);
+        });
+        return 'Data Updated!!!';
     }
 
     /**
@@ -102,4 +108,6 @@ class StudentController extends Controller
        DB::table('students')->delete($student);
        return "Data Deleted";
     }
+
+
 }

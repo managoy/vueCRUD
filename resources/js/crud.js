@@ -11,6 +11,7 @@ var crud = new Vue({
             address: '',
             students: [],
             preData:[],
+            history:[],
         };
     },
     mounted() {
@@ -22,6 +23,7 @@ var crud = new Vue({
             axios.get('/student')
                 .then(function (response) {
                     currentObj.students = response.data;
+                    console.log(currentObj.students);
 
                 })
                 .catch(function (error) {
@@ -60,10 +62,32 @@ var crud = new Vue({
                 });
         },
         openModal: function(data){
-            debugger;
+            //debugger;
             let currentObj = this;
             currentObj.preData = data;
             $('#exampleModal').modal('show');
+        },
+        updateData: function(e){
+            e.preventDefault();
+            let currentObj = this;
+            let id = currentObj.preData.id;
+            axios.post("/student/"+id,
+                {
+                    name: this.preData.name,
+                    email: this.preData.email,
+                    address: this.preData.address
+                }
+                )
+                .then(response=> $('#exampleModal').modal('hide') )
+                .catch(error=>console.log(error));
+        },
+        openHistory: function(id){
+            //debugger;
+            let currentObj = this;
+            $('#historyModal').modal('show');
+            axios.get('student/'+ id)
+                .then(response=>currentObj.history=response.data)
+                .catch(error=>console.log(error));
         }
     }
 

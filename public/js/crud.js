@@ -14338,7 +14338,8 @@ var crud = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       email: '',
       address: '',
       students: [],
-      preData: []
+      preData: [],
+      history: []
     };
   },
   mounted: function mounted() {
@@ -14349,6 +14350,7 @@ var crud = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       var currentObj = this;
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/student').then(function (response) {
         currentObj.students = response.data;
+        console.log(currentObj.students);
       })["catch"](function (error) {
         currentObj.output = error;
       });
@@ -14379,10 +14381,34 @@ var crud = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       });
     },
     openModal: function openModal(data) {
-      debugger;
+      //debugger;
       var currentObj = this;
       currentObj.preData = data;
       $('#exampleModal').modal('show');
+    },
+    updateData: function updateData(e) {
+      e.preventDefault();
+      var currentObj = this;
+      var id = currentObj.preData.id;
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/student/" + id, {
+        name: this.preData.name,
+        email: this.preData.email,
+        address: this.preData.address
+      }).then(function (response) {
+        return $('#exampleModal').modal('hide');
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    openHistory: function openHistory(id) {
+      //debugger;
+      var currentObj = this;
+      $('#historyModal').modal('show');
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('student/' + id).then(function (response) {
+        return currentObj.history = response.data;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
     }
   }
 });
